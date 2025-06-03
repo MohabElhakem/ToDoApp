@@ -1,18 +1,32 @@
-// just type the function that is used to delete 
-// 1 needs the name of the array it will search in 
+// uses the same logic as in AddMod.js but with diffrent functionallity
 
-function deletetask(TasksArray, To_be_deleted_task_title){
-    
-    let index = TasksArray.findIndex(task => task.title.toLowerCase() === To_be_deleted_task_title.toLowerCase());
+const readline = require('readline');
 
-   if (index !== -1)
-     { TasksArray.splice(index,1);
-        console.log(" Task deleted "); }
-    else {console.log(" Does not Exists" );}
+function askQuestion(query){
+    const rl = readline.createInterface({
+    input : process.stdin,
+    output: process.stdout
+    });
+    return new Promise(resolve=> {
+        rl.question(query,answer => {
+            rl.close();
+            resolve(answer);
+        });
+    });
+}
+
+async function deletetask(TasksArray){
+
+    const input = await askQuestion("Enter the title of the task to delete: ");
+    let index = TasksArray.findIndex(task=>task.title.toLowerCase()===input.toLowerCase());
+
+    if (index !== -1) {
+    TasksArray.splice(index, 1);
+    console.log("Task deleted successfully.");
+    } else {
+    console.log("Task not found.");
+    }
 };
 
 module.exports = deletetask;
 
-/*let T = [ {title:"1st",stats:"pending"} , {title:"2st",stats:"done"}, {title:"3st",stats:"pending"}];
-
-deletetask(T , "1st");*/ 
