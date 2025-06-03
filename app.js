@@ -3,38 +3,35 @@ const readline = require ('readline'); // this is the first step of creating an 
 const addTask= require('./AddMod');
 const deleteTask = require('./DeleteMod');
 // i added the important files that i need to run my code 
-const rl = readline.createInterface({ // creating the interface
-    input: process.stdin,               // tells node to listen to standerd input
-    output: process.stdout              // tells node to print the massage to terminal outputs
-});
+// the same as the first two files you need to make my questions in its own function 
 
-var Tasks = [];// this is my main array start anything after this exipt requires
+function askQuestion(query){
+     const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
 
-rl.question("What do you want to do \n1.add\t2.delete\n" ,
-     (chosingTheFeature) => { if (chosingTheFeature === "1" ) {
-        rl.question("What Task Would you like to add \n\n",(userInputs) => {
+  return new Promise (resolve=>{
+    rl.question(query,answer=>{
+        rl.close();
+        resolve(answer);
+    });
+  });
+}
+const Tasks =[];
+async function main(){
 
-             const [ title , stat ] = userInputs.split(',').map(str=>str.trim());
-             addTask(Tasks, title, stat);
-             console.log( Tasks );
-             rl.close() ;// close the add question
-            } );     
-         } 
 
-         else if (chosingTheFeature === "2") {
+    const choice= await askQuestion("What do you want to do?\n1. Add\n2. Delete\n> ");
+    if (choice === "1") {
+        await addTask(Tasks);
+    } else if (choice === "2"){
+        await deleteTask(Tasks);
+    }else {
+    console.log("Invalid option. Please enter 1 or 2.");
+    }
+    console.log("Current tasks:", Tasks);
 
-        rl.question("What Do you Want to Delete",(userInputs)=>{
-            
-            deleteTask(Tasks ,userInputs)
-            console.log(Tasks);
-            rl.close();//closing the delete question
-             } );
-         }
+}
 
-         else {
-            console.log("Invalid option. Please enter 1 or 2.");
-            rl.close();// this is the closing of the main question
-         }
-        }
-
-);
+main();

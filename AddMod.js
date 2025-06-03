@@ -1,15 +1,31 @@
-// lets start with the most basic add functin 
+// this function  takes only the place it will put the task on
+const { resolve } = require('path');
+const readline = require('readline');
+ 
+function askQuestion(query){
 
-function addTask ( TaskArray,task , stat = 'Task In Progress'){
-    const taskObj = {title : task , status : stat };
-    TaskArray.push(taskObj);
+    const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+// the function promises an answer
+return new Promise (resolve=>{
+    rl.question(query,                      // you ask the question
+        answer=>{
+            rl.close();                // when you answer it thequestion ends and the promise resolve it 
+            resolve (answer);
+    });
+});
 }
-// this function have three parameters first one is for telling the functio in which array i will be storing the taskObj
-//then i need to export that function so i will be able to use it in the app module 
+
+async function addTask (TasksArray){        // async for telling the function it will stop to wait at somepoint
+
+    const input = await askQuestion("Enter task (title, status): "); // you want an input thats why you asked question
+    const [title, status = "pending"] = input.split(',').map(str => str.trim());
+    TasksArray.push({ title, status });
+    console.log("Task added successfully.");
+}
 
 module.exports = addTask;
-/* because i added the function itself i can type addTask when i try to use it for now
-    if i eported is as a method 
-        module.exports={addTask};
-    then i will need to call it as a method using 
-        "the name i set".addTask */ 
+
+
