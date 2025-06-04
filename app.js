@@ -23,7 +23,7 @@ const Tasks =[];
 async function main(){
 
 
-    const choice= await askQuestion("What do you want to do?\n1. Add\n2. Delete\nx. terminate\n> ");
+    const choice= await askQuestion("What do you want to do?\n1. Add\n2. Delete\naddx. terminate\n> ");
     if (choice === "1") {
         await addTask(Tasks);
     } else if (choice === "2"){
