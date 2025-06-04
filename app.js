@@ -19,19 +19,46 @@ function askQuestion(query){
   });
 }
 const Tasks =[];
+
 async function main(){
 
 
-    const choice= await askQuestion("What do you want to do?\n1. Add\n2. Delete\n> ");
+    const choice= await askQuestion("What do you want to do?\n1. Add\n2. Delete\nx. terminate\n> ");
     if (choice === "1") {
         await addTask(Tasks);
     } else if (choice === "2"){
         await deleteTask(Tasks);
-    }else {
-    console.log("Invalid option. Please enter 1 or 2.");
-    }
+    }else if (choice === "x") { terminate = true; }
     console.log("Current tasks:", Tasks);
 
 }
+//
+var terminate = false;
 
-main();
+(async ()=> {
+
+  do {
+    await main();
+  } while(terminate===false)
+
+    console.log ("This program is terminated")
+}) ();
+
+/*
+Each module (AddMod.js, DeleteMod.js, etc.) runs its own readline interface to ask user input.
+Node.js readline can only handle one question at a time per interface, so it's safer to keep it separate per module.
+By having askQuestion locally:
+Each module is independent and reusable.
+You avoid interference between multiple readline interfaces.
+It keeps code modular, clean, and avoids bugs.
+
+readline.question() is asynchronous.
+It starts the question and then immediately continues running the rest of your code.
+The callback (the function with answer => { ... }) runs later, after the user types something and presses Enter.
+
+A Promise waits for the user to answer.
+await pauses your function until the Promise resolves (i.e. the user finishes typing).
+This lets your code run in the right order, even though it's still asynchronous under the hood.
+You used Promises to make readline.question() wait like a regular (synchronous) line,
+so the rest of your code runs only after the user responds.
+*/ 
