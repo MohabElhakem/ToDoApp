@@ -19,22 +19,30 @@ function askQuestion(query){
   });
 }
 const Tasks =[];
+
 async function main(){
 
 
-    const choice= await askQuestion("What do you want to do?\n1. Add\n2. Delete\n> ");
+    const choice= await askQuestion("What do you want to do?\n1. Add\n2. Delete\naddx. terminate\n> ");
     if (choice === "1") {
         await addTask(Tasks);
     } else if (choice === "2"){
         await deleteTask(Tasks);
-    }else {
-    console.log("Invalid option. Please enter 1 or 2.");
-    }
+    }else if (choice === "x") { terminate = true; }
     console.log("Current tasks:", Tasks);
 
 }
+//
+var terminate = false;
 
-main();
+(async ()=> {
+
+  do {
+    await main();
+  } while(terminate===false)
+
+    console.log ("This program is terminated")
+}) ();
 
 /*
 Each module (AddMod.js, DeleteMod.js, etc.) runs its own readline interface to ask user input.
