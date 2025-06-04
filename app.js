@@ -14,35 +14,40 @@ function askQuestion(query){
   return new Promise (resolve=>{
     rl.question(query,answer=>{
         rl.close();
-        resolve(answer);
+        resolve(answer.trim());
     });
   });
 }
 const Tasks =[];
+var terminate = false;
 
-async function main(){
+async function main(ter){
 
 
-    const choice= await askQuestion("What do you want to do?\n1. Add\n2. Delete\naddx. terminate\n> ");
+    const choice= await askQuestion("\nWhat do you want to do?\nPress\n1 To Add\n2 To Delete\nx to terminate\ns To see The list\n> ");
     if (choice === "1") {
         await addTask(Tasks);
     } else if (choice === "2"){
         await deleteTask(Tasks);
-    }else if (choice === "x") { terminate = true; }
-    console.log("Current tasks:", Tasks);
+    } else if (choice.toLowerCase() === "x") { return true;}
+      else if (choice.toLowerCase() === "s"){
+        console.log("\nCurrent tasks:", Tasks);
+    } else{console.log("\nInvalid choice type 1,2 or x to chosse")}
+    return false;
+    
 
 }
-//
-var terminate = false;
+// because you passied the terminate to the function the function wont affect its value untill you tell it to 
 
 (async ()=> {
 
   do {
-    await main();
+    terminate = await main(terminate);
   } while(terminate===false)
 
-    console.log ("This program is terminated")
+    console.log ("\nThis program is terminated")
 }) ();
+// this is called Immediately Invoked Function Expression
 
 /*
 Each module (AddMod.js, DeleteMod.js, etc.) runs its own readline interface to ask user input.
