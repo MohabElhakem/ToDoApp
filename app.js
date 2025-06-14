@@ -2,9 +2,13 @@ console.log("i am working");
 const readline = require ('readline'); // this is the first step of creating an interface importing the module
 const addTask= require('./AddMod');
 const deleteTask = require('./DeleteMod');
+const fs = require ('fs');
 // i added the important files that i need to run my code 
 // the same as the first two files you need to make my questions in its own function 
-
+//
+//
+//
+//
 function askQuestion(query){
      const rl = readline.createInterface({
     input: process.stdin,
@@ -18,11 +22,25 @@ function askQuestion(query){
     });
   });
 }
-const Tasks =[];
-var terminate = false;
-
+//
+//
+//
+//the start of working with the json file
+let Tasks =[];  // try and catch method is for running a risky code without craching the program
+try{
+  const data = fs.readFileSync('./data.json','utf8'); // Read file content as a string
+  Tasks= JSON.parse(data); //Convert the JSON string into a real JS array and store it in `tasks`
+}catch (err){
+  console.error('Error loading tasks:', err);
+}
+//
+//
+//
+//
+// 
+//  the main function that will be runeed as a loop
+var terminate = false; // this to end the program when it become true
 async function main(ter){
-
 
     const choice= await askQuestion("\nWhat do you want to do?\nPress\n1 To Add\n2 To Delete\nx to terminate\ns To see The list\n> ");
     if (choice === "1") {
@@ -32,11 +50,13 @@ async function main(ter){
     } else if (choice.toLowerCase() === "x") { return true;}
       else if (choice.toLowerCase() === "s"){
         console.log("\nCurrent tasks:", Tasks);
-    } else{console.log("\nInvalid choice type 1,2 or x to chosse")}
+    } else{console.log("\nInvalid choice type 1,2,s or x to chosse")}
     return false;
-    
 
 }
+//
+//
+//
 // because you passied the terminate to the function the function wont affect its value untill you tell it to 
 
 (async ()=> {
@@ -45,7 +65,14 @@ async function main(ter){
     terminate = await main(terminate);
   } while(terminate===false)
 
-    console.log ("\nThis program is terminated")
+    fs.writeFile('data.json',JSON.stringify(Tasks,null,2),(err)=>{
+      if(err){
+         console.error('Error writing file:', err);
+      }else{
+        console.log("The Data Has Been Saved");
+      }
+    })
+    console.log ("\nThis program is terminated");
 }) ();
 // this is called Immediately Invoked Function Expression
 
